@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "@emotion/styled";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -13,7 +13,17 @@ type Props = {
 };
 
 const TweetCard = styled(({ className }: Props) => {
-  const { tweets, isLoading } = useBumbleApi();
+  const { tweets, isLoading, isLive, setIsLive, fetchOlder } = useBumbleApi();
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.innerHeight >= document.body.offsetHeight) {
+        setIsLive(false);
+        fetchOlder();
+      }
+      
+    });
+  }, [setIsLive, fetchOlder]);
 
   if (isLoading) return <CircularProgress />;
 
